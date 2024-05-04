@@ -30,6 +30,48 @@ export class Board{
         this.initialize();
     }
 
+    public static movingMove(frame:number[],direction:DIRECTION):boolean{
+
+        let movingOnXAxis = 0;
+        let movingOnYAxis = 0;
+        if(direction == CONSTANTS.LEFT || direction == CONSTANTS.RIGHT) movingOnXAxis = 1;
+        if(direction == CONSTANTS.UP || direction == CONSTANTS.DOWN) movingOnYAxis = 1;
+
+        let reversed = false;
+        if(direction === CONSTANTS.UP ) reversed = true;
+        if(direction === CONSTANTS.DOWN ) reversed = false;
+        if(direction === CONSTANTS.LEFT ) reversed = true;
+        if(direction === CONSTANTS.RIGHT ) reversed = false;
+
+        let i = Board.initiator(reversed,frame);
+        for(;Board.comperator(i,reversed,frame);){
+            let j = Board.initiator(reversed,frame);
+            for(;Board.comperator(j,reversed,frame);){
+                const nextsDirection = reversed?-1:1;
+                const fromIndex =  Utils.cordsTo1D(i,j,4); 
+                const toIndex = Utils.cordsTo1D(
+                    i + (movingOnYAxis*nextsDirection),
+                    j + (movingOnXAxis*nextsDirection),
+                    4
+                );
+
+                if(toIndex >= frame.length || toIndex < 0) break;
+               
+                if(
+                    Board.joinCheck(fromIndex,toIndex,frame) ||
+                    Board.moveCheck(fromIndex,toIndex,frame)
+                )
+                return true;
+                
+                        
+                
+                j = Board.increamentor(j,reversed);
+            }
+            i = Board.increamentor(i,reversed);
+        }
+        return false;
+    }
+
     initialize(config?:BoardConfig){
         this.grid = [];
         this.somethingHappened = false;
@@ -156,14 +198,21 @@ export class Board{
     private initiator(reversed:boolean):number{
         return reversed?this.dimensions-1:0;
     }
-
+    public static initiator(reversed:boolean,array:number[]):number{
+        return reversed?Utils.getDimensions(array)-1:0;
+    }
     private comperator(i:number,reversed:boolean):boolean{
         return reversed?i>=0:i<this.dimensions;
     }
-
+    public static comperator(i:number,reversed:boolean,array:number[]):boolean{
+        return reversed?i>=0:i<Utils.getDimensions(array);
+    }
     private increamentor(i:number,reversed:boolean):number{
        return reversed?i-1:i+1;
     }
+    public static increamentor(i:number,reversed:boolean):number{
+        return reversed?i-1:i+1;
+     }
 
     private join(fromCellIndex:number,toCellIndex:number){
         if(
@@ -177,6 +226,12 @@ export class Board{
         }
     }
 
+    public static joinCheck(fromCellIndex:number,toCellIndex:number,board:number[]){
+        return board[fromCellIndex] === board[toCellIndex] &&
+            board[fromCellIndex] !== CONSTANTS.EMPTY_CELL;
+        
+    }
+
     private move(fromCellIndex:number,toCellIndex:number){
         if(
             this.grid[toCellIndex] === CONSTANTS.EMPTY_CELL&&
@@ -187,6 +242,13 @@ export class Board{
             this.grid[fromCellIndex] = CONSTANTS.EMPTY_CELL;
             this.somethingHappened = true;
         }
+    }
+
+    public static moveCheck(fromCellIndex:number,toCellIndex:number,array:number[]){
+       return       array[toCellIndex] === CONSTANTS.EMPTY_CELL&&
+            array[fromCellIndex] !== CONSTANTS.EMPTY_CELL
+
+        
     }
 
     get board2D(){

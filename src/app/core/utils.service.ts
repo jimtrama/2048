@@ -34,6 +34,9 @@ export class Utils{
     public static getRandomInt(max:number):number {
         return Math.floor(Math.random() * max);
     }
+    public static getDimensions(array:number[]):number {
+        return Math.floor(Math.sqrt(array.length));
+    }
 
     public static cordsTo2D(index:number,d:number):number[] {
         return [Math.floor(index/d),index%d]

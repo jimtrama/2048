@@ -4,6 +4,7 @@ import { Controller } from '../core/controller.model';
 import { Utils } from '../core/utils.service';
 import { Engine } from '../core/engine.model';
 import { RandomStrategy } from '../core/random.strategy.model';
+import { AllUpStartagy } from '../core/all-up.strategy.model';
 
 @Component({
   selector: 'app-play',
@@ -37,8 +38,8 @@ export class PlayComponent implements AfterViewInit,OnInit {
     this.board = new Board();
     this.board.onAddedTile = this.updateJust.bind(this);
     this.controller = new Controller();
-    const s = new RandomStrategy();
-    this.e = new Engine(this.board,s);
+    const topLeft = new AllUpStartagy();
+    this.e = new Engine(this.board,topLeft);
   }
 
   ngOnInit(): void {
@@ -49,6 +50,24 @@ export class PlayComponent implements AfterViewInit,OnInit {
       this.e.onFrameUpdated = this.frameUp.bind(this);
       this.e.runThrotteled();
     }
+  }
+  isRandom = true;
+
+  radioChange(event:Event){
+    this.isRandom = (event?.target as HTMLInputElement).value=== "true"
+  }
+
+  resetBtn(){
+    if(!this.e.sub.closed){
+      this.e.sub.unsubscribe();
+    }
+    this.board.initialize();
+  }
+  startAgainSim(){
+    this.board.initialize();
+    this.e.strategy = this.isRandom ? new RandomStrategy(): new AllUpStartagy();
+    this.e.runThrotteled();
+
   }
   private isTouchDevice() {
     return (('ontouchstart' in window) ||

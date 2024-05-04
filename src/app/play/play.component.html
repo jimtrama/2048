@@ -14,10 +14,18 @@
     </div>
   </div>
   <div class="ledgend-container">
+    <div class="ledgent-row"></div><button (click)="resetBtn()">Reset</button>
     <ng-container *ngIf="simMode">
         <div class="ledgent-row">
             <input type="range" min="5" max="200" class="slider" id="rate" (change)="slideRate()">
             <button (click)="changeRate()">Change</button>
+        </div>
+        <div class="ledgent-row">
+            <input type="checkbox" id="random-st" value="true" (change)="radioChange($event)">
+            <input type="checkbox" id="top-left-st" value="false" (change)="radioChange($event)">
+        </div>
+        <div class="ledgent-row">
+            <button (click)="startAgainSim()">Start again</button>
         </div>
         <div class="ledgent-row">
             <span id="rate-info"></span>

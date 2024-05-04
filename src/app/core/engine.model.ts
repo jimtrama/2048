@@ -31,6 +31,9 @@ export class Engine {
   sub:Subscription = new Subscriber();
 
   runThrotteled(fromRestart=false) {
+    if(!this.sub.closed){
+        this.sub.unsubscribe();
+    }
     if(!fromRestart)
     this.board.initialize();
     this.sub = interval(this.frameDelayInMs).subscribe((f) => {
