@@ -43,12 +43,17 @@ export class PlayComponent implements AfterViewInit,OnInit {
 
   ngOnInit(): void {
     if(!this.simMode){
-      this.controller.listen(this.board);
+      this.controller.listen(this.board,this.isTouchDevice());
     }else{
       
       this.e.onFrameUpdated = this.frameUp.bind(this);
       this.e.runThrotteled();
     }
+  }
+  private isTouchDevice() {
+    return (('ontouchstart' in window) ||
+       (navigator.maxTouchPoints > 0) ||
+       (navigator.maxTouchPoints > 0));
   }
 
   frameUp(frame:number[][]){
