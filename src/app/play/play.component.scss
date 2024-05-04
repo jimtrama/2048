@@ -1,0 +1,149 @@
+
+:host{
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    
+}
+.to-wrap-row{
+    flex-wrap: wrap;
+    display: flex;
+    width: 100vw;
+    height: min-content;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    margin: 10px;
+}
+.playing-container{
+    width: 50vw;
+    height: 50vw;
+    min-width: 400px;
+    min-height: 400px;
+    background-color: rgb(216,202,187);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.ledgend-container{
+    min-width: 200px;
+    height: 350px;
+    flex: 0.5;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    
+    background-color: rgb(216,201,187);
+    border-radius: 15px;
+}
+
+.row{
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+.cell{
+    background-color: rgb(204,192,179);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.c0{
+    background-color: rgb(204,192,179) !important;
+}
+
+.c2{
+    background-color: rgb(238,227,218) !important;
+    color: rgb(118,109,101) !important;
+    
+}
+.cell-added{
+    animation-name: t;
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+@keyframes t {
+    0%{
+        opacity: 0;
+        transform: scale(1);
+    }
+    80%{
+        opacity: 0.8;
+        transform: scale(1.4);
+    }
+    100%{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.ledgent-row{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+
+    .icon{
+        height: 40px;
+        width: 40px;
+    }
+    .text{
+        font-size: 2rem;
+    }
+    .up{
+        transform: rotateZ(90deg);
+    }
+    .right{
+        transform: rotateZ(180deg);
+    }
+    .down{
+        transform: rotateZ(-90deg);
+    }
+}
+
+.c4{
+    background-color: rgb(237,223,200) !important;
+    color: rgb(118,109,101) !important;
+}
+.c8{
+    background-color: rgb(242,177,120) !important;
+    color: white;
+}
+.c16{
+    background-color: rgb(245,149,98) !important;
+    color: white;
+}
+.c32{
+    background-color: rgb(245,124,95) !important;
+    color: white;
+}
+.c64{
+    background-color: rgb(246,94,58) !important;
+    color: white;
+}
+.c128{
+    background-color: rgb(246,94,58) !important;
+    color: white;
+}
+.c256{
+    background-color: rgb(231, 75, 32) !important;
+}
+.c564{
+    background-color: rgb(231, 75, 32) !important;
+}
+.c1024{
+    background-color: rgb(231, 75, 32) !important;
+}
