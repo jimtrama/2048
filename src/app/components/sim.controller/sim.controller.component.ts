@@ -7,7 +7,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class SimControllerComponent {
 
-  @Output() startClicked = new EventEmitter<void>();
+  @Output() startClicked = new EventEmitter<string>();
   @Output() pauseClicked = new EventEmitter<void>();
   @Output() resetClicked = new EventEmitter<void>();
   @Output() rateChanged = new EventEmitter<number>();
@@ -18,7 +18,14 @@ export class SimControllerComponent {
 
 
   start(){
-    this.startClicked.next();
+    const boxes = document.getElementsByClassName("radio-btn-str");
+    let str = "RANDOM";
+    for(let i=0;i<boxes.length;i++){
+      if((boxes[i] as HTMLInputElement).checked){
+        str = (boxes[i] as HTMLInputElement).value
+      };
+    }
+    this.startClicked.next(str);
   }
   pause(){
     this.pauseClicked.next();
@@ -36,9 +43,6 @@ export class SimControllerComponent {
     this.rateChanged.next(this.rate);
   }
 
-  radioChange(e:Event){
-
-  }
   slideRate(){
     (document.getElementById("rate-info")as HTMLElement).innerText = 
     +(document.getElementById("rate")as HTMLInputElement).value + " MS"

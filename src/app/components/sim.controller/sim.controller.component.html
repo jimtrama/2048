@@ -6,13 +6,26 @@
         <button (click)="reset()">Reset</button>
     </div>
     <div class="controls-row">
-        <span>Time per step: {{rate}}ms</span>
         <input type="range" min="5" max="200" class="slider" id="rate" (change)="rateSliderChanged()">
+    </div>
+    <div class="controls-row">
+        <span>step:{{rate}}ms</span>
         <button (click)="rateButtonClicked()">Change</button>
     </div>
     <div class="ledgent-row">
-        <input type="radio" id="random-st" value="true" (change)="radioChange($event)">
-        <input type="radio" id="top-left-st" value="false" (change)="radioChange($event)">
+        <fieldset>
+            <legend>Strategy</legend>
+            <div class="strategy-container">
+                <div style="display: flex; justify-content: center;align-items: center;">
+                    <label for="strategy1">Random</label>
+                    <input class="radio-btn-str" type="radio" id="strategy1" name="strategy" value="RANDOM" checked /> 
+                </div>
+              <div> 
+                <label for="strategy2">Top Left</label>
+                <input class="radio-btn-str" type="radio" id="strategy2" name="strategy" value="TOPLEFT" />
+              </div>
+            </div>
+          </fieldset>
     </div>
 </div>
 

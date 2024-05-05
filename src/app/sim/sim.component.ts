@@ -27,8 +27,8 @@ export class SimComponent implements OnDestroy {
     this.simulationService.stop();
   }
 
-  startButtonClicked(){
-    this.simulationService.start();
+  startButtonClicked(str:string){
+    this.simulationService.start(str);
   }
 
   pauseButtonClicked(){

@@ -3,7 +3,7 @@
 
 <app-play [boardImported]="board" [scoreImported]="score" ></app-play>
 <app-sim-controller 
-(startClicked)="startButtonClicked()"
+(startClicked)="startButtonClicked($event)"
 (pauseClicked)="pauseButtonClicked()"
 (resetClicked)="resetButtonClicked()"
 (rateChanged)="rateChanged($event)"

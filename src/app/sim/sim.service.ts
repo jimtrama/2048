@@ -4,6 +4,8 @@ import { Simulation } from "../core/simulation.model";
 import { Engine } from "../core/engine.model";
 import { Board } from "../core/board.model";
 import { Strategy } from "../core/strategy.model";
+import { RandomStrategy } from "../core/random.strategy.model";
+import { AllUpStartagy } from "../core/all-up.strategy.model";
 
 @Injectable({providedIn:"root"})
 export class SimService{
@@ -18,7 +20,12 @@ export class SimService{
         
     }
 
-    start(){
+    start(str:string){
+        if(str === "RANDOM"){
+            this.engine.strategy = new RandomStrategy();
+        }else if(str === "TOPLEFT"){
+            this.engine.strategy = new AllUpStartagy();
+        }  
         this.engine.runThrotteled();
     }
 
