@@ -5,8 +5,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    position: relative;
-    
+    position: relative;   
 }
 
 .to-wrap-row{
@@ -52,7 +51,7 @@
 }
 
 .sim-cell{
-    border:1px solid black;
+    text-decoration: underline;
 }
 .cell-added{
     animation-name: fade-in;
