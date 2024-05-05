@@ -13,7 +13,7 @@ export class Simulation{
     run(config:SimulationConfig):number[]{
         const results:number[] = [];
         for(let i = 0 ; i < config.runs;i++){
-            const score = config.engine.run();
+            const score = config.engine.runInstant();
             results.push(score);
             if(!!config.callback){
                 config.callback(score);

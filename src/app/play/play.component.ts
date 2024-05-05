@@ -11,7 +11,7 @@ import { SimService } from '../sim/sim.service';
   templateUrl: './play.component.html',
   styleUrl: './play.component.scss'
 })
-export class PlayComponent implements AfterViewInit,OnInit,OnChanges {
+export class PlayComponent implements AfterViewInit,OnInit {
 
   @Input() boardImported:number[][] = [];
   @Input() scoreImported:number = -1;
@@ -32,18 +32,9 @@ export class PlayComponent implements AfterViewInit,OnInit,OnChanges {
     return this.board.board2D;
   }
   controller:Controller;
-  justAddedIndex = -1;
+  private justAddedIndex = -1;
 
-  renderInEffect(i:number,j:number):boolean{
-    if(this.justAddedIndex === Utils.cordsTo1D(i,j,this.board.d)){
-      this.justAddedIndex = -1;
-      return true;
-    }
-    return false;
-  }
-  
-
-  constructor(private simService:SimService){
+  constructor(){
     this.board = new Board();
     this.board.onAddedTile = this.updateJust.bind(this);
     this.controller = new Controller();
@@ -59,17 +50,16 @@ export class PlayComponent implements AfterViewInit,OnInit,OnChanges {
     this.cellWidth = (width / this.board.d ) - 15;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(!!changes["boardImported"]){
-      //this.boardImported = changes["boardImported"].currentValue;
-    }
-    if(!!changes["scoreImported"]){
-
-    }
-  }
-
   updateJust(v:number){
     this.justAddedIndex = v;
+  }
+
+  checkJustAdded(i:number,j:number):boolean{
+    if(this.justAddedIndex === Utils.cordsTo1D(i,j,this.board.d)){
+      this.justAddedIndex = -1;
+      return true;
+    }
+    return false;
   }
   
 }

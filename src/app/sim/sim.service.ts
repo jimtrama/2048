@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subject } from "rxjs";
-import { Simulation } from "../core/simulation.model";
+import { Subject } from "rxjs";
 import { Engine } from "../core/engine.model";
 import { Board } from "../core/board.model";
 import { Strategy } from "../core/strategy.model";
@@ -13,11 +12,9 @@ export class SimService{
     private updated_frame = new Subject<number[][]>();
     public engine_updated$ = this.updated_frame.asObservable();
 
-
     init(board:Board,strategy:Strategy){
         this.engine = new Engine(board,strategy);
-        this.engine.onFrameUpdated = this.updateF.bind(this);
-        
+        this.engine.onFrameUpdated = this.updateF.bind(this); 
     }
 
     start(str:string){
@@ -26,20 +23,16 @@ export class SimService{
         }else if(str === "TOPLEFT"){
             this.engine.strategy = new AllUpStartagy();
         }  
-        this.engine.runThrotteled();
+        this.engine.start();
     }
 
-    stop(){
-        this.engine.sub.unsubscribe();
+    pause(){
+        this.engine.pause();
     }
+
     reset(){
-        this.engine.sub.unsubscribe();
-        this.engine.board.initialize();
-        this.updated_frame.next(this.engine.board.board2D);
-    }
-
-    getFrame():number[][]{
-       return  this.engine.getFrame();
+        this.engine.restart();
+        this.updated_frame.next(this.engine.frame);
     }
 
     updateRate(rate:number){
