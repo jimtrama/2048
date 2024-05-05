@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { SimService } from './sim.service';
-import { Board } from '../core/board.model';
-import { RandomStrategy } from '../core/random.strategy.model';
+import { Board } from '../../core/board.model';
+import { RandomStrategy } from '../../core/random.strategy.model';
 
 @Component({
   selector: 'app-sim',
@@ -10,7 +10,7 @@ import { RandomStrategy } from '../core/random.strategy.model';
 })
 export class SimComponent implements OnDestroy {
   public board:number[][];
-  public score:number= -1;
+  public score:number= 0;
 
   constructor(private simulationService:SimService){
     const b = new Board();

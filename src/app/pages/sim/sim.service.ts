@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { Engine } from "../core/engine.model";
-import { Board } from "../core/board.model";
-import { Strategy } from "../core/strategy.model";
-import { RandomStrategy } from "../core/random.strategy.model";
-import { AllUpStartagy } from "../core/all-up.strategy.model";
+import { Engine } from "../../core/engine.model";
+import { Board } from "../../core/board.model";
+import { Strategy } from "../../core/strategy.model";
+import { RandomStrategy } from "../../core/random.strategy.model";
+import { AllUpStartagy } from "../../core/all-up.strategy.model";
 
 @Injectable({providedIn:"root"})
 export class SimService{
@@ -31,7 +31,7 @@ export class SimService{
     }
 
     reset(){
-        this.engine.restart();
+        this.engine.reset();
         this.updated_frame.next(this.engine.frame);
     }
 

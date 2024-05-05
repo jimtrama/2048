@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SimComponent } from './sim/sim.component';
-import { PlayComponent } from './play/play.component';
-import { SettingsComponent } from './settings/settings.component';
+import { SimComponent } from './pages/sim/sim.component';
+import { PlayComponent } from './pages/play/play.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   {

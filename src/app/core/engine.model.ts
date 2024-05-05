@@ -52,6 +52,11 @@ export class Engine {
     this.pause();
     this.start();
   }
+  
+  reset(){
+    this.pause();
+    this.board.initialize();
+  }
 
   onFrameUpdated(frame: number[][]) {}
 

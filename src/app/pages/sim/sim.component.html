@@ -1,0 +1,13 @@
+<div class="to-wrap-row">
+    <!-- Board Section -->  
+    <app-board-view [board]="board" [score]="score" ></app-board-view>
+    <!-- Legend Section -->
+    
+    <app-sim-controller 
+    (startClicked)="startButtonClicked($event)"
+    (pauseClicked)="pauseButtonClicked()"
+    (resetClicked)="resetButtonClicked()"
+    (rateChanged)="rateChanged($event)"
+    ></app-sim-controller>
+    
+</div>
