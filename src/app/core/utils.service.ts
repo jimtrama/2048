@@ -4,6 +4,7 @@ import { Injectable } from "@angular/core";
     providedIn:"root"
 })
 export class Utils{
+    
     public static transformMatrix(matrix:number[],level:number):number[][]{
         if(matrix.length == 0 || matrix.length % level != 0){
             new Error("Transforming failed ");
@@ -55,6 +56,6 @@ export class Utils{
         at_to:number,
         at_from:number
     ){
-        return Math.abs(at_to - at_from) * value /  Math.abs(to - from) 
+        return Math.abs(at_to - at_from) * value /  Math.abs(to - from);
     }
 }

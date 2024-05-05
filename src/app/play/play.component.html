@@ -4,21 +4,26 @@
 </div>
 
 <div class="to-wrap-row">
+  <!-- Board Section -->
   <div class="playing-container">
     <div class="row" *ngFor="let row of boardToRender; let i = index">
       <div
         *ngFor="let cell of row; let j = index"
         [class]="'cell' + ' c' + cell"
         [style]="'width:' + cellWidth + 'px; height:' + cellWidth + 'px'"
-        [ngClass]="{ 'cell-added': renderInEffect(i, j) }"
+        [ngClass]="{ 
+          'cell-added': checkJustAdded(i, j),
+          'sim-cell': boardImported.length > 1 && cell > 1
+         }"
       >
         {{ cell !== 0 ? cell : "" }}
       </div>
     </div>
   </div>
+
+  <!-- Legend Section -->
   <ng-container *ngIf="boardImported.length === 0">
     <app-ledgend [controller]="controller"></app-ledgend>
   </ng-container>
-  
   
 </div>

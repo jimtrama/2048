@@ -16,27 +16,29 @@ export class SimComponent implements OnDestroy {
     const b = new Board();
     const s = new RandomStrategy();
     this.simulationService.init(b,s);
-    this.board = this.simulationService.getFrame();
+    this.board = this.simulationService.engine.frame;
     this.simulationService.engine_updated$.subscribe((frame)=>{
       this.board = frame;
-      this.score = this.simulationService.engine.board.score;
+      this.score = this.simulationService.engine.score;
     })
   }
 
   ngOnDestroy(): void {
-    this.simulationService.stop();
+    this.simulationService.pause();
   }
 
-  startButtonClicked(){
-    this.simulationService.start();
+  startButtonClicked(str:string){
+    this.simulationService.start(str);
   }
 
   pauseButtonClicked(){
-    this.simulationService.stop();
+    this.simulationService.pause();
   }
+
   resetButtonClicked(){
     this.simulationService.reset();
   }
+
   rateChanged(rate:number){
     this.simulationService.updateRate(rate);
   }

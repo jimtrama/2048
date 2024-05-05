@@ -4,13 +4,21 @@ import { Strategy } from './strategy.model';
 
 export class Engine {
   private frameDelayInMs;
-  public board: Board;
+  private board: Board;
   public strategy: Strategy;
+  private clock:Subscription = new Subscription();
 
   set rate(r:number){
     this.frameDelayInMs = r;
-    this.sub.unsubscribe()
-    this.runThrotteled(true);
+    this.run(false);
+  }
+
+  get frame():number[][]{
+    return this.board.board2D;
+  }
+
+  get score():number{
+    return this.board.score;
   }
 
   constructor(board: Board, strategy: Strategy, frameDelayInMs = 1000) {
@@ -19,7 +27,7 @@ export class Engine {
     this.frameDelayInMs = frameDelayInMs;
   }
 
-  run(): number {
+  runInstant(): number {
     this.board.initialize();
     while (!this.board.isFull) {
       const picked_direction = this.strategy.move(this.board.board);
@@ -28,26 +36,35 @@ export class Engine {
     return this.board.score;
   }
 
-  sub:Subscription = new Subscriber();
+  pause(){
+    this.clock.unsubscribe();
+  }
 
-  runThrotteled(fromRestart=false) {
-    if(!this.sub.closed){
-        this.sub.unsubscribe();
-    }
+  start() {
+    this.run(true);
+  }
 
-    if(!fromRestart) this.board.initialize();
+  resume() {
+    this.run(false);
+  }
 
-    this.sub = interval(this.frameDelayInMs).subscribe((f) => {
-      if (this.board.isFull) this.sub.unsubscribe();
+  restart(){
+    this.pause();
+    this.start();
+  }
+
+  onFrameUpdated(frame: number[][]) {}
+
+  private run(cleanRun:boolean){
+    this.clock.unsubscribe();
+
+    if(cleanRun) this.board.initialize();
+    
+    this.clock = interval(this.frameDelayInMs).subscribe((f) => {
+      if (this.board.isFull) this.clock.unsubscribe();
       const picked_direction = this.strategy.move(this.board.board);
       this.board.pushTowards(picked_direction);
-      this.onFrameUpdated(this.board.board2D,this.board.score);
+      this.onFrameUpdated(this.board.board2D);
     });
   }
-
-  getFrame():number[][]{
-    return this.board.board2D;
-  }
-
-  public onFrameUpdated(frame: number[][],score:number) {}
 }
