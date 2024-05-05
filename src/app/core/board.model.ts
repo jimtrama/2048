@@ -103,6 +103,8 @@ export class Board{
         this.push(direction,CONSTANTS.MOVE);
         this.push(direction,CONSTANTS.JOIN);
         this.push(direction,CONSTANTS.MOVE);
+        this.push(direction,CONSTANTS.JOIN);
+        this.push(direction,CONSTANTS.MOVE);
         if(this.somethingHappened){
             this.addNewTile();
         }

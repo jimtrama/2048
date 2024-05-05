@@ -1,2 +1,14 @@
 
-<app-play [simMode]="true" ></app-play>
+
+
+<app-play [boardImported]="board" [scoreImported]="score" ></app-play>
+<app-sim-controller 
+(startClicked)="startButtonClicked()"
+(pauseClicked)="pauseButtonClicked()"
+(resetClicked)="resetButtonClicked()"
+(rateChanged)="rateChanged($event)"
+
+
+></app-sim-controller>
+
+

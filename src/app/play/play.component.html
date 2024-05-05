@@ -1,53 +1,24 @@
-<h1>{{ score }}</h1>
+<div style="display: flex; justify-content: space-evenly; align-items: center;">
+  <h3 style="color: rgb(117,108,101);">Score:</h3>
+  <h1 style="color: rgb(117,108,101);">{{ score }}</h1>
+</div>
 
 <div class="to-wrap-row">
   <div class="playing-container">
-    <div class="row" *ngFor="let row of ToRender; let i = index">
+    <div class="row" *ngFor="let row of boardToRender; let i = index">
       <div
         *ngFor="let cell of row; let j = index"
         [class]="'cell' + ' c' + cell"
-        [style]="'width:' + stepWi + 'px;' + 'height:' + stepWi + 'px;'"
-        [ngClass]="{ 'cell-added': get1D(i, j) === justAddedIndex }"
+        [style]="'width:' + cellWidth + 'px; height:' + cellWidth + 'px'"
+        [ngClass]="{ 'cell-added': renderInEffect(i, j) }"
       >
         {{ cell !== 0 ? cell : "" }}
       </div>
     </div>
   </div>
-  <div class="ledgend-container">
-    <div class="ledgent-row"></div><button (click)="resetBtn()">Reset</button>
-    <ng-container *ngIf="simMode">
-        <div class="ledgent-row">
-            <input type="range" min="5" max="200" class="slider" id="rate" (change)="slideRate()">
-            <button (click)="changeRate()">Change</button>
-        </div>
-        <div class="ledgent-row">
-            <input type="checkbox" id="random-st" value="true" (change)="radioChange($event)">
-            <input type="checkbox" id="top-left-st" value="false" (change)="radioChange($event)">
-        </div>
-        <div class="ledgent-row">
-            <button (click)="startAgainSim()">Start again</button>
-        </div>
-        <div class="ledgent-row">
-            <span id="rate-info"></span>
-        </div>
-    </ng-container>
-    <ng-container *ngIf="!simMode">
-        <div class="ledgent-row">
-            <img src="assets/pointer.png" class="icon up" />
-            <span class="text">{{ controller.upKey }}</span>
-          </div>
-          <div class="ledgent-row">
-            <img src="assets/pointer.png" class="icon right" />
-            <span class="text">{{ controller.rightKey }}</span>
-          </div>
-          <div class="ledgent-row">
-            <img src="assets/pointer.png" class="icon down" />
-            <span class="text">{{ controller.downKey }}</span>
-          </div>
-          <div class="ledgent-row">
-            <img src="assets/pointer.png" class="icon" />
-            <span class="text">{{ controller.leftKey }}</span>
-          </div>
-    </ng-container> 
-  </div>
+  <ng-container *ngIf="boardImported.length === 0">
+    <app-ledgend [controller]="controller"></app-ledgend>
+  </ng-container>
+  
+  
 </div>
