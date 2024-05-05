@@ -7,8 +7,8 @@ export class Controller {
   public upKey = 'i';
   public downKey = 'k';
 
-  public listen(board: Board, needTouchsupport = false) {
-    if (!!needTouchsupport) {
+  public listen(board: Board) {
+    if (this.isTouchDevice()) {
         let pointX = 0;
         let pointY = 0;
       document.addEventListener("touchstart", (e) => {
@@ -34,8 +34,14 @@ export class Controller {
   public onUpInput() {}
   public onDownInput() {}
 
+  private isTouchDevice() {
+    return (('ontouchstart' in window) ||
+       (navigator.maxTouchPoints > 0) ||
+       (navigator.maxTouchPoints > 0));
+  }
+
   private listener(event: KeyboardEvent | TouchEvent, board: Board,x = 0,y = 0) {
-    if (typeof event === typeof KeyboardEvent) {
+    if (!this.isTouchDevice()) {
       event = event as KeyboardEvent;
       if (event.key == this.rightKey) {
         board.pushTowards(CONSTANTS.RIGHT);

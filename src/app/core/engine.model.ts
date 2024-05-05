@@ -31,15 +31,23 @@ export class Engine {
   sub:Subscription = new Subscriber();
 
   runThrotteled(fromRestart=false) {
-    if(!fromRestart)
-    this.board.initialize();
+    if(!this.sub.closed){
+        this.sub.unsubscribe();
+    }
+
+    if(!fromRestart) this.board.initialize();
+
     this.sub = interval(this.frameDelayInMs).subscribe((f) => {
       if (this.board.isFull) this.sub.unsubscribe();
       const picked_direction = this.strategy.move(this.board.board);
       this.board.pushTowards(picked_direction);
-      this.onFrameUpdated(this.board.board2D);
+      this.onFrameUpdated(this.board.board2D,this.board.score);
     });
   }
 
-  public onFrameUpdated(frame: number[][]) {}
+  getFrame():number[][]{
+    return this.board.board2D;
+  }
+
+  public onFrameUpdated(frame: number[][],score:number) {}
 }

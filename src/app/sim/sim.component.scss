@@ -1,7 +1,4 @@
-.graph{
-    position: absolute; 
-    top: 50%;
-    left: 0;
+:host{
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
 }
