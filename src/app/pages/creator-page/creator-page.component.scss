@@ -1,0 +1,11 @@
+.mainContainer{
+    display: flex;
+    height: 100%;
+}
+.tools-area{
+    background-color: green;
+}
+.mainArea{
+    flex: 1;
+    position: relative;
+}

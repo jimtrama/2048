@@ -21,8 +21,8 @@ export class BoardViewComponent implements AfterViewInit {
     this.cellWidth = (width / this.board.length ) - 15;
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event:Event) {
+  @HostListener('window:resize')
+  onResize() {
     this.setWidthOfTiles()
   }
 

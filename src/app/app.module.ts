@@ -12,6 +12,9 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { SimControllerComponent } from './components/sim.controller/sim.controller.component';
 import { LedgendComponent } from './components/ledgend/ledgend.component';
 import { BoardViewComponent } from './components/board-view/board-view.component';
+import { CreatorPageComponent } from './pages/creator-page/creator-page.component';
+import { ContainerBlockComponent } from './pages/creator-page/comps/container-block/container-block.component';
+import { LinkBlockComponent } from './pages/creator-page/comps/link-block/link-block.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { BoardViewComponent } from './components/board-view/board-view.component
     SettingsComponent,
     SimControllerComponent,
     LedgendComponent,
-    BoardViewComponent
+    BoardViewComponent,
+    CreatorPageComponent,
+    ContainerBlockComponent,
+    LinkBlockComponent
   ],
   imports: [
     BrowserModule,
