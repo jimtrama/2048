@@ -5,7 +5,7 @@ export type DIRECTION =
     CONSTANTS.DOWN|
     CONSTANTS.LEFT|
     CONSTANTS.UP|
-    CONSTANTS.RIGHT;
+    CONSTANTS.RIGHT | null;
 
 export type ACTION = CONSTANTS.JOIN | CONSTANTS.MOVE;
 export type ITER_WAY = CONSTANTS.NORMAL | CONSTANTS.REVERSED;
@@ -30,7 +30,7 @@ export class Board{
         this.initialize();
     }
 
-    public static movingMove(frame:number[],direction:DIRECTION):boolean{
+    public static checkIfLeagalMove(frame:number[],direction:DIRECTION):boolean{
 
         let movingOnXAxis = 0;
         let movingOnYAxis = 0;
@@ -61,10 +61,7 @@ export class Board{
                     Board.joinCheck(fromIndex,toIndex,frame) ||
                     Board.moveCheck(fromIndex,toIndex,frame)
                 )
-                return true;
-                
-                        
-                
+                return true;                 
                 j = Board.increamentor(j,reversed);
             }
             i = Board.increamentor(i,reversed);
@@ -107,11 +104,19 @@ export class Board{
         this.push(direction,CONSTANTS.MOVE);
         if(this.somethingHappened){
             this.addNewTile();
+            this.push(direction,CONSTANTS.JOIN);
+        this.push(direction,CONSTANTS.MOVE);
+        this.push(direction,CONSTANTS.JOIN);
+        this.push(direction,CONSTANTS.MOVE);
+        this.push(direction,CONSTANTS.JOIN);
+        this.push(direction,CONSTANTS.MOVE);
         }
         this.checkFullBoard();
     }
 
-    onAddedTile(v:number){};
+    onAddedTile(v:number){
+        
+    };
 
     private initialize_from_template(config:BoardConfig){
         for(let i = 0 ; i < config.startingPosition.length ; i++){
@@ -124,7 +129,7 @@ export class Board{
 
         const randomOrder = Utils.randomShufledArray(this.dimensions*this.dimensions);
         for(let i = 0 ; i < randomOrder.length ; i++){
-            if(this.grid[randomOrder[i]] == 0){
+            if(this.grid[randomOrder[i]] == CONSTANTS.EMPTY_CELL){
                 this.grid[randomOrder[i]] = 2;
                 this.onAddedTile(randomOrder[i]);
                 return;
@@ -134,12 +139,23 @@ export class Board{
     }
 
     private checkFullBoard(){
+        let fullBoard = true;
         for(const cell of this.grid){
-            if(cell === CONSTANTS.EMPTY_CELL){
-                return;
+            if(cell == CONSTANTS.EMPTY_CELL){
+                
+                
+                fullBoard = false;
+                break;
             }
         }
-        this.isFull = true;
+        if(Board.checkIfLeagalMove(this.grid,CONSTANTS.UP)||
+        Board.checkIfLeagalMove(this.grid,CONSTANTS.DOWN)||
+        Board.checkIfLeagalMove(this.grid,CONSTANTS.LEFT)||
+        Board.checkIfLeagalMove(this.grid,CONSTANTS.RIGHT)){
+            return;
+        }
+
+        this.isFull = fullBoard;
     }
 
     private push(direction:DIRECTION,action:ACTION){
@@ -247,7 +263,7 @@ export class Board{
     }
 
     public static moveCheck(fromCellIndex:number,toCellIndex:number,array:number[]){
-       return       array[toCellIndex] === CONSTANTS.EMPTY_CELL&&
+       return array[toCellIndex] === CONSTANTS.EMPTY_CELL&&
             array[fromCellIndex] !== CONSTANTS.EMPTY_CELL
 
         

@@ -1,10 +1,12 @@
 import { Subscriber, Subscription, interval, noop } from 'rxjs';
-import { Board } from './board.model';
+import { Board, DIRECTION } from './board.model';
 import { Strategy } from './strategy.model';
+import { CONSTANTS } from './constants';
 
 export class Engine {
   private frameDelayInMs;
   private board: Board;
+  private prevMove: DIRECTION = null;
   public strategy: Strategy;
   private clock:Subscription = new Subscription();
 
@@ -31,7 +33,11 @@ export class Engine {
     this.board.initialize();
     while (!this.board.isFull) {
       const picked_direction = this.strategy.move(this.board.board);
+      console.log(picked_direction);
       this.board.pushTowards(picked_direction);
+      if(this.strategy.killed){
+        break;
+      }
     }
     return this.board.score;
   }
@@ -67,7 +73,8 @@ export class Engine {
     
     this.clock = interval(this.frameDelayInMs).subscribe((f) => {
       if (this.board.isFull) this.clock.unsubscribe();
-      const picked_direction = this.strategy.move(this.board.board);
+      const picked_direction = this.strategy.move(this.board.board,this.prevMove);
+      this.prevMove = picked_direction;
       this.board.pushTowards(picked_direction);
       this.onFrameUpdated(this.board.board2D);
     });
