@@ -73,7 +73,7 @@ export class Engine {
     
     this.clock = interval(this.frameDelayInMs).subscribe((f) => {
       if (this.board.isFull) this.clock.unsubscribe();
-      const picked_direction = this.strategy.move(this.board.board,this.prevMove);
+      const picked_direction = this.strategy.move(this.board.board);
       this.prevMove = picked_direction;
       this.board.pushTowards(picked_direction);
       this.onFrameUpdated(this.board.board2D);
