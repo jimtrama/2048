@@ -142,8 +142,6 @@ export class Board{
         let fullBoard = true;
         for(const cell of this.grid){
             if(cell == CONSTANTS.EMPTY_CELL){
-                
-                
                 fullBoard = false;
                 break;
             }

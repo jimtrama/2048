@@ -11,6 +11,9 @@ export class CreatorPageComponent {
 
   public item:HTMLElement = {} as HTMLElement;
 
+  rX:number = 0;
+  rY:number = 0;
+
   constructor(){}
 
 
@@ -47,8 +50,7 @@ export class CreatorPageComponent {
     this.rX = x ;
     this.rY = y;
   }
-  rX:number = 0;
-  rY:number = 0;
+  
 
   pressedOnCell(x:number,y:number):boolean{
     let items = document.getElementsByTagName("app-container-block");
