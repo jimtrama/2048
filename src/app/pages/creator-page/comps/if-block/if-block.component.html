@@ -1,0 +1,8 @@
+<label for="pet-select">Choose a pet:</label>
+
+<select name="pets" id="pet-select">
+  @for(variable of vars;track variable){
+    <option value="">{{variable.name}}</option>
+  }
+
+</select>

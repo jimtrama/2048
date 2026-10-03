@@ -13,8 +13,10 @@ import { SimControllerComponent } from './components/sim.controller/sim.controll
 import { LedgendComponent } from './components/ledgend/ledgend.component';
 import { BoardViewComponent } from './components/board-view/board-view.component';
 import { CreatorPageComponent } from './pages/creator-page/creator-page.component';
-import { ContainerBlockComponent } from './pages/creator-page/comps/container-block/container-block.component';
-import { LinkBlockComponent } from './pages/creator-page/comps/link-block/link-block.component';
+import { BlockComponent } from './pages/creator-page/comps/block/block.component';
+import { VarBlockComponent } from './pages/creator-page/comps/var-block/var-block.component';
+import { IfBlockComponent } from './pages/creator-page/comps/if-block/if-block.component';
+import { StatementBlockComponent } from './pages/creator-page/comps/statement-block/statement-block.component';
 
 @NgModule({
   declarations: [
@@ -27,8 +29,11 @@ import { LinkBlockComponent } from './pages/creator-page/comps/link-block/link-b
     LedgendComponent,
     BoardViewComponent,
     CreatorPageComponent,
-    ContainerBlockComponent,
-    LinkBlockComponent
+    BlockComponent,
+    IfBlockComponent,
+    StatementBlockComponent,
+    
+    VarBlockComponent
   ],
   imports: [
     BrowserModule,

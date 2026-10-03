@@ -1,13 +1,29 @@
 <div class="mainContainer">
-    <div class="tools-area">
-        <h2>Tool bar</h2>
-    </div>
-    <div class="mainArea">
-        <app-container-block [x]="rX" [y]="rY">
-            <a>tets</a>
-        </app-container-block>
-        <app-container-block>
-            <a>tets</a>
-        </app-container-block>
-    </div>
+  <div class="tools-area">
+    <h2>Tool bar</h2>
+    <button (click)="addBlock('if')">Add If</button>
+    <button (click)="addBlock('statement')">Add statement</button>
+    <button (click)="addBlock('var')">Add variable</button>
+  </div>
+  <div class="mainArea">
+    @for (block of blocks; track block) {
+      @switch (block.type) {
+        @case ("if") {
+          <app-block [title]="'If Block'">
+            <app-if-block [id]="'block-' + block.id" />
+          </app-block>
+        }
+        @case ("statement") {
+          <app-block [title]="'Statement Block'">
+            <app-statement-block [id]="'block-' + block.id" />
+          </app-block>
+        }
+        @case ("var") {
+          <app-block [title]="'Variable Block'">
+            <app-var-block [id]="'block-' + block.id" />
+          </app-block>
+        }
+      }
+    }
+  </div>
 </div>

@@ -1,66 +1,57 @@
-import { Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-creator-page',
   templateUrl: './creator-page.component.html',
   styleUrl: './creator-page.component.scss'
 })
-export class CreatorPageComponent {
-
-  private mousePressed = false;
+export class CreatorPageComponent implements AfterViewInit{
 
   public item:HTMLElement = {} as HTMLElement;
+  public blocks:{id:number,type:string}[] = [];
+  private paddingLeft = 0;
+  private paddingTop = 0;
+  private mouvingEl :HTMLElement|undefined = undefined;
 
-  rX:number = 0;
-  rY:number = 0;
 
-  constructor(){}
+  ngAfterViewInit(): void {
+    this.paddingLeft = (document.body.getElementsByClassName('tools-area')[0] as HTMLElement).getBoundingClientRect().width;
+    this.paddingTop = (document.body.getElementsByTagName('app-header')[0] as HTMLElement).getBoundingClientRect().height;
+  }
 
+  addBlock(type:string){
+    this.blocks.push({id:this.blocks.length,type});
+  }
+
+  @HostListener("mouseup",['$event'])
+  mouseUp(e:PointerEvent){
+    this.mouvingEl = undefined;
+    console.log(e);
+  }
+
+  @HostListener("mousemove",['$event'])
+  mouseMoving(e:PointerEvent){
+    if(this.mouvingEl != undefined ){
+      if(e.pageX - this.paddingLeft > 0)
+      this.mouvingEl.style.left = e.pageX - this.paddingLeft + 'px';
+      this.mouvingEl.style.top = e.pageY - this.paddingTop + 'px';
+    }
+    
+  }
 
   @HostListener("mousedown",['$event'])
   mouseDown(e:PointerEvent){
-    if(this.pressedOnCell(e.pageX,e.pageY))
-    this.mousePressed = true;
-    console.log(e);
-    console.log(e.offsetX);
-    console.log(e.offsetY);
-    
-    
-  }
-  @HostListener("mouseup",['$event'])
-  mouseUp(e:PointerEvent){
-    this.mousePressed = false;
-    console.log(e);
-    console.log(e.offsetX);
-    console.log(e.offsetY);
-    
-    
-  }
-  @HostListener("mousemove",['$event'])
-  mouseMoving(e:PointerEvent){
-    if(this.mousePressed){
-      this.moveCell(e.offsetX,e.offsetY)
-    }
-    
+    this.mouvingEl = this.pressedOnCell(e.pageX,e.pageY) as HTMLElement;
   }
 
-  moveCell(x:number,y:number){
-    this.item.style.top = y + "px";
-    this.item.style.left = x + "px";
-    this.rX = x ;
-    this.rY = y;
-  }
-  
-
-  pressedOnCell(x:number,y:number):boolean{
-    let items = document.getElementsByTagName("app-container-block");
+  pressedOnCell(x:number,y:number):HTMLElement|undefined{
+    let items = document.getElementsByTagName("app-block");
     for(let i = 0 ; i < items.length;i++){
       if(this.clickIsInsdideItem(x,y,items[i] as HTMLElement)){
-        this.item = items[i] as HTMLElement;
-        return true;
+        return items[i] as HTMLElement;
       }
     }
-    return false;
+    return undefined;
   }
 
   clickIsInsdideItem(x:number,y:number,item:HTMLElement):boolean{
