@@ -1,29 +1,93 @@
-<div class="mainContainer">
-  <div class="tools-area">
-    <h2>Tool bar</h2>
-    <button (click)="addBlock('if')">Add If</button>
-    <button (click)="addBlock('statement')">Add statement</button>
-    <button (click)="addBlock('var')">Add variable</button>
-  </div>
-  <div class="mainArea">
-    @for (block of blocks; track block) {
-      @switch (block.type) {
-        @case ("if") {
-          <app-block [title]="'If Block'">
-            <app-if-block [id]="'block-' + block.id" />
-          </app-block>
+<div class="editor">
+  <header class="project-bar">
+    <div class="brand"><span class="brand-icon">✦</span> block studio <span class="badge">CREATOR</span></div>
+    <input class="project-name" aria-label="Project name" [value]="projectName" (input)="projectName = input($event); persist()">
+    <span class="saved">{{ saved ? '✓ Saved on this device' : 'Your creative playground' }}</span>
+    <button class="download" (click)="download()">↓ Download project</button>
+  </header>
+  <div class="workspace">
+    <section class="coding">
+      <nav class="tabs" aria-label="Editor tabs">
+        @for (item of ['Code', 'Costumes', 'Backdrops']; track item) {
+          <button [class.selected]="tab === item" (click)="tab = item">{{ item === 'Code' ? '〈〉' : item === 'Costumes' ? '◈' : '▧' }} {{ item }}</button>
         }
-        @case ("statement") {
-          <app-block [title]="'Statement Block'">
-            <app-statement-block [id]="'block-' + block.id" />
-          </app-block>
-        }
-        @case ("var") {
-          <app-block [title]="'Variable Block'">
-            <app-var-block [id]="'block-' + block.id" />
-          </app-block>
-        }
+      </nav>
+      @if (tab === 'Code') {
+        <div class="code-layout">
+          <nav class="categories" aria-label="Block categories">
+            @for (category of categories; track category.name) {
+              <button [class.chosen]="selectedCategory === category.name" (click)="selectedCategory = category.name"><i [style.background]="category.color"></i>{{ category.name }}</button>
+            }
+            <span class="category-bottom">✦<br>Imagine<br>& create</span>
+          </nav>
+          <aside class="palette">
+            <h2>{{ selectedCategory }}</h2><p>Drag a block or click to add</p>
+            @for (block of categoryBlocks; track block.kind) {
+              <button class="block palette-block" [class.hat]="block.kind === 'flag'" [style.background]="color(block.category)" draggable="true" (dragstart)="drag($event, block)" (dragend)="endDrag()" (click)="add(block)">
+                {{ block.label }} @if (block.kind === 'if') { <span class="value">{{ block.operand }} {{ block.comparison }}</span> } @if (block.kind === 'for') { <span class="value">{{ block.from }}</span> to <span class="value">{{ block.to }}</span> step <span class="value">{{ block.step }}</span> } @if (block.value !== undefined) { <span class="value">{{ block.value }}</span> } {{ block.suffix }}
+              </button>
+            }
+            <p class="control-help" *ngIf="selectedCategory === 'Control'">If and for add an ending block automatically. Drop the body before the ending. For bounds are inclusive (up to 100 iterations). Use i in numeric inputs or &#123;i&#125; in speech.</p>
+            <div class="tip"><span>💡</span><strong>Small blocks. Big ideas.</strong><p>Start with an event, add some motion, then hit the green flag.</p></div>
+          </aside>
+          <section class="script-area" (dragover)="$event.preventDefault()" (drop)="drop($event)" aria-label="Script workspace">
+            <div class="canvas-heading"><span>Sprite 1 <span class="muted">/ scripts</span></span><button (click)="clear()" [disabled]="!blocks.length">Clear all</button></div>
+            <div class="script-stack">
+              @for (block of blocks; track block.id; let i = $index) {
+                <div class="script-row" [style.margin-left.px]="blockIndent(i)" (dragover)="$event.preventDefault()" (drop)="drop($event, i)">
+                  <div class="block script-block" [class.hat]="block.kind === 'flag'" [class.executing]="activeId === block.id" [style.background]="color(block.category)" draggable="true" (dragstart)="drag($event, block, i)" (dragend)="endDrag()">
+                    {{ block.label }}
+                    @if (block.kind === 'if') {
+                      <select aria-label="Condition variable" [value]="block.operand" (change)="updateField(block, 'operand', $event)">
+                        @for (operand of operands; track operand) { <option [value]="operand" [selected]="operand === block.operand">{{ operand }}</option> }
+                      </select>
+                      <select aria-label="Condition operator" [value]="block.comparison" (change)="updateField(block, 'comparison', $event)">
+                        @for (comparison of comparisons; track comparison) { <option [value]="comparison" [selected]="comparison === block.comparison">{{ comparison }}</option> }
+                      </select>
+                    }
+                    @if (block.kind === 'for') {
+                      <input aria-label="For start" [value]="block.from" (input)="updateField(block, 'from', $event)"> to
+                      <input aria-label="For end" [value]="block.to" (input)="updateField(block, 'to', $event)"> step
+                      <input aria-label="For step" [value]="block.step" (input)="updateField(block, 'step', $event)">
+                    }
+                    @if (block.value !== undefined) { <input [class.text-value]="block.kind === 'say'" [attr.aria-label]="block.label + ' value'" [value]="block.value" (input)="update(block, $event)" (mousedown)="$event.stopPropagation()" draggable="false"> }
+                    {{ block.suffix }}
+                  </div>
+                  <div class="block-actions"><button (click)="shift(i, -1)" [disabled]="i === 0" aria-label="Move block up">↑</button><button (click)="shift(i, 1)" [disabled]="i === blocks.length - 1" aria-label="Move block down">↓</button><button (click)="remove(i)" aria-label="Delete block">×</button></div>
+                </div>
+              }
+              <div class="drop-hint">+ {{ blocks.length ? 'Drop the next block here' : 'Drag blocks here to start creating' }}</div>
+            </div>
+            <div class="canvas-footer"><span>{{ blocks.length }} blocks</span><span>Drag to reorder · Click values to edit</span></div>
+          </section>
+        </div>
+      } @else {
+        <section class="asset-panel"><span class="eyebrow">MAKE IT YOURS</span><h2>{{ tab === 'Costumes' ? 'A little character. A lot of personality.' : 'Set the scene for your story.' }}</h2><p>Choose a {{ tab === 'Costumes' ? 'color for your sprite' : 'backdrop for your stage' }}.</p>
+          <div class="asset-options">
+            @for (option of (tab === 'Costumes' ? ['orange', 'blue'] : ['grid', 'plain']); track option) {
+              <button [class.active-asset]="(tab === 'Costumes' ? costume : backdrop) === option" (click)="tab === 'Costumes' ? costume = option : backdrop = option; persist()"><span [style.color]="option === 'blue' ? '#4c97ff' : '#ef9138'">{{ tab === 'Costumes' ? '◆' : option === 'grid' ? '▦' : '□' }}</span>{{ option }}</button>
+            }
+          </div>
+        </section>
       }
-    }
+    </section>
+    <aside class="preview">
+      <div class="stage-toolbar"><div><button class="flag" (click)="run()" [disabled]="running" aria-label="Run script">⚑</button><button class="stop" (click)="stop()" aria-label="Stop script">■</button><span>{{ running ? 'Running' : 'Stage' }}</span></div><button (click)="stop(); reset()" class="reset">↺ Reset</button></div>
+      <div class="stage" [class.grid]="backdrop === 'grid'">
+        <div class="score"><span>score</span><b>{{ score }}</b></div>
+        <div class="sprite" [style.left.%]="50 + x / 4.8" [style.top.%]="50 - y / 3.6" [style.visibility]="visible ? 'visible' : 'hidden'">
+          @if (speech) { <div class="speech">{{ speech }}</div> }
+          <svg viewBox="0 0 100 110" role="img" aria-label="Cat sprite" [style.width.px]="85 * size / 100" [style.transform]="'rotate(' + (direction - 90) + 'deg)'">
+            <g [attr.fill]="costume === 'orange' ? '#f5a13b' : '#4c97ff'" stroke="#633d28" stroke-width="2.5" stroke-linejoin="round"><path d="M65 74 Q98 59 93 84 Q89 98 66 92" fill="none" stroke-width="10" [attr.stroke]="costume === 'orange' ? '#f5a13b' : '#4c97ff'"/><ellipse cx="48" cy="78" rx="22" ry="23"/><path d="M29 90 L21 103 L41 103 L46 92 M54 92 L61 103 L78 103 L67 89"/><path d="M19 24 L19 4 L39 16 Q53 11 66 18 L83 7 L81 34 Q91 65 57 68 Q17 67 15 44 Z"/></g>
+            <path d="M24 22 L24 12 L34 21 M70 23 L78 15 L77 28" fill="#ffd1b0"/><ellipse cx="39" cy="36" rx="10" ry="14" fill="white"/><ellipse cx="62" cy="36" rx="10" ry="14" fill="white"/><ellipse cx="43" cy="37" rx="3" ry="6" fill="#3c3541"/><ellipse cx="66" cy="37" rx="3" ry="6" fill="#3c3541"/><path d="M48 47 L57 47 L52 52 Z" fill="#633d28"/><path d="M39 53 Q53 66 68 51" fill="white" stroke="#633d28" stroke-width="2"/><path d="M28 45 L6 39 M28 50 L4 52 M74 45 L96 39 M74 50 L98 54" stroke="#633d28" stroke-width="2"/><ellipse cx="48" cy="78" rx="11" ry="13" fill="#fff0dc"/>
+          </svg>
+        </div>
+        <span class="stage-label">{{ backdrop === 'grid' ? 'Creative space' : 'Blank canvas' }}</span>
+      </div>
+      <div class="coordinates"><span>i <b>{{ loopIndex }}</b></span><span>x <b>{{ x | number:'1.0-0' }}</b></span><span>y <b>{{ y | number:'1.0-0' }}</b></span><span>direction <b>{{ direction | number:'1.0-0' }}°</b></span></div>
+      <section class="sprite-panel"><div class="sprite-heading"><h2>Sprites</h2><span>1 sprite</span></div><button class="sprite-card"><span [style.color]="costume === 'orange' ? '#ef9138' : '#4c97ff'">◆</span><strong>Sprite 1</strong><small>The curious cat</small></button><div class="sprite-info"><span>Size <b>{{ size }}%</b></span><span>Visibility <b>{{ visible ? 'Shown' : 'Hidden' }}</b></span></div></section>
+      <div class="help"><span>✦</span><div><strong>What will you create?</strong><p>Make your cat dance, tell a story, or try a loop. It all starts with a block.</p></div></div>
+    </aside>
   </div>
+  <footer class="status-bar"><span><i [class.running]="running"></i>{{ status }}</span><span>Made for curious minds ✦</span></footer>
 </div>
